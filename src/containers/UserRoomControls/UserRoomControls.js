@@ -1,3 +1,10 @@
+import {
+  connectToRoom,
+  leaveRoom,
+  shareScreen,
+  unShareScreen,
+} from '@/services/room';
+
 export default {
   name: 'UserRoomControls',
   data() {
@@ -8,15 +15,36 @@ export default {
   },
   computed: {
     connected() {
-      return false;
+      return this.$store.getters.isConnectionToRoomSucceed;
+    },
+    connecting() {
+      return this.$store.getters.isConnectionToRoomPending;
+    },
+    failed() {
+      return this.$store.getters.isConnectionToRoomFailed;
+    },
+    disconnected() {
+      return this.$store.getters.isDisconnectedFromRoom;
     },
     isConnectButtondisabled() {
-      return !this.userName || !this.roomName;
+      return this.connecting || !this.userName || !this.roomName;
+    },
+    isScreenShared() {
+      return this.$store.state.room.screenShared;
     },
   },
   methods: {
     connectToRoom() {
-      
+      return connectToRoom(this.roomName);
+    },
+    leaveRoom() {
+      return leaveRoom();
+    },
+    shareScreen() {
+      return shareScreen();
+    },
+    unShareScreen() {
+      return unShareScreen();
     },
   },
 };

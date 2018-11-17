@@ -1,5 +1,13 @@
 .peer-section {
   width: 100%;
-  height: calc(50vh - 35px);
+  height: calc(100vh - 70px);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
   background-color: thistle;
+}
+
+.video-wrapper {
+  max-width: 100%;
 }

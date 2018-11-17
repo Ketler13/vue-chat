@@ -1,5 +1,10 @@
 <template>
   <div class="peer-section">
+    <div class="video-wrapper">
+      <video-preview
+        class="camera-preview"
+        :tracks="peerTracks"/>
+    </div>
   </div>
 </template>
 

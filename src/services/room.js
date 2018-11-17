@@ -9,6 +9,8 @@ import {
   SET_EXTENSION_STATUS,
   SET_PARTICIPANT_TRACKS,
   REMOVE_PREVIEW_TRACKS,
+  SHARE_SCREEN,
+  UNSHARE_SCREEN,
 } from '@/store/room/mutationTypes';
 import {
   ROOM_CONNECTION_SUCCESS,
@@ -24,11 +26,12 @@ import { isChrome, isFirefox } from '@/services/browser';
 
 const isBrowserChrome = isChrome();
 const isBrowserFirefox = isFirefox();
-let extensionInstalled = false;
-
-let activeRoom = null;
 const previewTracks = null;
+
+let extensionInstalled = false;
+let activeRoom = null;
 let connectedToRoom = false;
+let screenTrack = null;
 
 // public methods
 
@@ -79,15 +82,30 @@ export function leaveRoom() {
   }
 }
 
+export function shareScreen() {
+  return getUserScreen()
+    .then(onGetUserScreenSuccess)
+    .catch(onGetUserScreenFail);
+}
+
+export function unShareScreen() {
+  removeScreenSharing();
+  activeRoom.localParticipant.unpublishTrack(screenTrack);
+  screenTrack = null;
+}
+
 // private methods
 
 function onRoomJoined(room) {
+  console.log(room.participants);
   activeRoom = room;
   connectedToRoom = true;
   setRoomConnectionStatus(ROOM_CONNECTION_SUCCESS);
   checkExtension();
   handleParticipantTracksAdding(room.localParticipant, ROLE_USER);
-  handleParticipantTracksAdding(room.participants[0], ROLE_PEER);
+
+  room.participants
+    .forEach(participant => handleParticipantTracksAdding(participant, ROLE_PEER));
 
   room.on('participantConnected', onParticipantConnected);
   room.on('trackAdded', onTrackAdded);
@@ -99,7 +117,8 @@ function onRoomJoined(room) {
   room.on('disconnected', onRoomDisconnected);
 }
 
-function onRoomConnectionFailed() {
+function onRoomConnectionFailed(err) {
+  console.log(err);
   activeRoom = null;
   connectedToRoom = false;
   setRoomConnectionStatus(ROOM_CONNECTION_FAIL);
@@ -142,6 +161,72 @@ function onTrackRemoved(track, participant) {
 function onParticipantDisconnected(participant) {
   log("Participant '" + participant.identity + "' left the room");
   detachParticipantTracks(participant);
+}
+
+function getUserScreen() {
+  if (!canShareScreen()) {
+    return false;
+  }
+
+  if (isBrowserChrome) {
+    return getChromeScreen();
+  }
+
+  if (isBrowserFirefox) {
+    return getFirefoxScreen();
+  }
+
+  return false;
+}
+
+function getChromeScreen() {
+  return createChromeExtensionPromise()
+    .then(onChromeExtensionSuccess);
+}
+
+function getFirefoxScreen() {
+  return window.navigator.mediaDevices.getUserMedia({
+    video: {
+      mediaSource: 'screen',
+    },
+  });
+}
+
+function createChromeExtensionPromise() {
+  return new Promise((resolve, reject) => {
+    const request = {
+      sources: ['window', 'screen', 'tab'],
+    };
+    window.chrome.runtime.sendMessage(EXTENSION_ID, request, (response) => {
+      if (response && response.type === 'success') {
+        resolve({ streamId: response.streamId });
+      } else {
+        reject(new Error('Could not get stream'));
+      }
+    });
+  });
+}
+
+function onChromeExtensionSuccess(response) {
+  return window.navigator.mediaDevices.getUserMedia({
+    video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        chromeMediaSourceId: response.streamId,
+      },
+    },
+  });
+}
+
+function onGetUserScreenSuccess(stream) {
+  setScreenSharing();
+  screenTrack = stream.getVideoTracks()[0];
+  activeRoom.localParticipant.publishTrack(screenTrack);
+}
+
+function onGetUserScreenFail(error) {
+  removeScreenSharing();
+  console.error('onGetUserScreenFail', error);
 }
 
 function checkExtension() {
@@ -189,6 +274,14 @@ function setExtensionStatus(status) {
 
 function setParticipantTracks(tracks, role) {
   store.commit(SET_PARTICIPANT_TRACKS, { role, tracks });
+}
+
+function setScreenSharing() {
+  store.commit(SHARE_SCREEN);
+}
+
+function removeScreenSharing() {
+  store.commit(UNSHARE_SCREEN);
 }
 
 window.addEventListener('beforeunload', leaveRoom);

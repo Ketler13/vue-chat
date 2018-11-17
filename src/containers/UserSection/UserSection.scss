@@ -1,9 +1,9 @@
 .user-section {
   width: 100%;
-  height: calc(50vh - 35px);
+  height: calc(100vh - 70px);
   background-color: wheat;
   display: flex;
-  flex-flow: row;
-  justify-content: space-around;
+  flex-flow: column;
+  justify-content: flex-start;
   align-items: center;
 }

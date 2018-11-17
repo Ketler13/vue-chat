@@ -1,7 +1,7 @@
 <template>
   <div class="user-camera-controls">
     <video-preview
-      class="camera-preview"
+      class="video-preview"
       :tracks="previewTracks"/>
     <toggler-button
       :activeTitle="togglerActiveTitle"

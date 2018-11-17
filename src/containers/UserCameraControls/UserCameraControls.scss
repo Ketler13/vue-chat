@@ -1,13 +1,14 @@
 .user-camera-controls {
   width: 300px;
   height: 250px;
+  margin-top: 50px;
   display: flex;
   flex-flow: column;
   justify-content: space-between;
   align-items: center;
 }
 
-.camera-preview {
+.video-preview {
   width: 300px;
   min-height: 225px;
   background-color: black;

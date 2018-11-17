@@ -16,6 +16,7 @@
         type="text"
         name="roomName"
         class="room-name"
+        disabled
         v-model="roomName"/>
     </div>
     <div class="room-connect-buttons">
@@ -30,6 +31,7 @@
       <button
         v-else
         class="disconnect-button"
+        @click="leaveRoom"
       >
         Disconnect
       </button>
@@ -38,8 +40,19 @@
       v-if="connected"
       class="room-display-share-button"
     >
-      <button class="share-display-toggler">
-        Share / Unshare
+      <button
+        v-if="isScreenShared"
+        class="unshare-screen"
+        @click="unShareScreen"
+      >
+        Unshare
+      </button>
+      <button
+        v-else
+        class="share-screen"
+        @click="shareScreen"
+      >
+        Share
       </button>
     </div>
   </div>

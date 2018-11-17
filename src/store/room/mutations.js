@@ -7,6 +7,8 @@ import {
   SET_EXTENSION_STATUS,
   SET_PARTICIPANT_TRACKS,
   REMOVE_PREVIEW_TRACKS,
+  SHARE_SCREEN,
+  UNSHARE_SCREEN,
 } from './mutationTypes';
 
 function detachTracks(tracks) {
@@ -35,6 +37,12 @@ export default {
   [REMOVE_PREVIEW_TRACKS](state) {
     detachTracks(state.previewTracks);
     state.previewTracks = null;
+  },
+  [SHARE_SCREEN](state) {
+    state.screenShared = true;
+  },
+  [UNSHARE_SCREEN](state) {
+    state.screenShared = false;
   },
   /* eslint-denable no-param-reassign */
 };

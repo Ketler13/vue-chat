@@ -10,6 +10,7 @@ const state = {
   previewTracks: null,
   previewError: null,
   extensionInstalled: false,
+  screenShared: false,
   tracks: {
     [ROLE_USER]: [],
     [ROLE_PEER]: [],

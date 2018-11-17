@@ -1,0 +1,12 @@
+.main-view {
+  display: flex;
+  flex-flow: row;
+  
+  .user-section {
+    flex: 2;
+  }
+  
+  .peer-section {
+    flex: 3;
+  }
+}
