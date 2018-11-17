@@ -1,29 +1,37 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <app-header />
+    <main-view />
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+<script>
+import { GET_TOKEN } from '@/store/actionTypes';
+import NotInstalledExtensionWarning from '@/components/NotInstalledExtensionWarning';
+import AppHeader from '@/containers/AppHeader';
+import MainView from '@/containers/MainView';
+
+export default {
+  components: {
+    NotInstalledExtensionWarning,
+    AppHeader,
+    MainView,
+  },
+  created() {
+    this.getToken();
+  },
+  computed: {
+    userName() {
+      return this.$store.state.userName;
+    },
+  },
+  methods: {
+    getToken() {
+      return this.$store.dispatch(GET_TOKEN);
+    },
+  },
+};
+</script>
+
+<style src="@/assets/styles/reset.css"></style>
+<style lang="scss" src="@/assets/styles/common.scss"></style>

@@ -1,0 +1,9 @@
+.user-section {
+  width: 100%;
+  height: calc(50vh - 35px);
+  background-color: wheat;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  align-items: center;
+}

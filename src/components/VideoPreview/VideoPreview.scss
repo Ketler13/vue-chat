@@ -1,0 +1,45 @@
+.video-preview {
+  position: relative;
+  transition: transform 0.1s linear;
+  
+  &.scaled {
+    position: absolute;
+    transform: scale(2);
+    box-shadow: 0px 0px 18px 1px rgba(0,0,0,1);
+  }
+}
+
+.scale-toggler {
+  position: absolute;
+  z-index: 1;
+  bottom: 0px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  opacity: 0.2;
+  transition: opacity 0.3s linear;
+  
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.toggler-title {
+  display: block;
+  width: 40px;
+
+  &.left {
+    transform: rotate(45deg);
+    transform-origin: 14px -5px;
+  }
+
+  &.right {
+    transform: rotate(-45deg);
+    transform-origin: -5px 12px;
+  }
+}
