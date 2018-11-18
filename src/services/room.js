@@ -43,7 +43,7 @@ export function connectToRoom(roomName) {
     const { token } = store.state;
     const connectOptions = {
       name: roomName,
-      logLevel: 'debug',
+      // logLevel: 'debug',
     };
 
     if (previewTracks) {

@@ -26,19 +26,33 @@ export default {
       if (this.scaled) {
         this.scaleVideo();
         this.subscribeToClickOut();
+        this.subscribeToEsc();
       } else {
         this.descaleVideo();
         this.unsubscribeFromClickOut();
+        this.unsubscribeFromEsc();
       }
     },
     subscribeToClickOut() {
       window.addEventListener('click', this.clickOutSubscriber);
     },
+    subscribeToEsc() {
+      window.addEventListener('keydown', this.escSubscriber);
+    },
     unsubscribeFromClickOut() {
       window.removeEventListener('click', this.clickOutSubscriber);
     },
+    unsubscribeFromEsc() {
+      window.removeEventListener('keydown', this.escSubscriber);
+    },
     clickOutSubscriber(ev) {
       if (!ev.target.closest('.video-preview')) {
+        this.toggleScale();
+        this.unsubscribeFromClickOut();
+      }
+    },
+    escSubscriber(ev) {
+      if (ev.keyCode === 27) {
         this.toggleScale();
         this.unsubscribeFromClickOut();
       }
@@ -51,6 +65,8 @@ export default {
         this.calulateScaleStyles();
       }
 
+      container.classList.add('scaled');
+
       Object.entries(this.containerStyles)
         .forEach(([property, value]) => {
           container.style[property] = value;
@@ -60,10 +76,13 @@ export default {
         .forEach(([property, value]) => {
           video.style[property] = value;
         });
+      this.$emit('scaled');
     },
     descaleVideo() {
+      this.$refs.previewContainer.classList.remove('scaled');
       this.$refs.previewContainer.style = '';
-      this.$el.querySelector('video').style.transform = 'scale(1)';
+      this.$el.querySelector('video').style.transform = '';
+      this.$emit('descaled');
     },
     calulateScaleStyles() {
       const { innerWidth, innerHeight } = window;
@@ -87,6 +106,8 @@ export default {
         computedWidth = maxwWidth;
         computedHeight = realHeight * scale;
       }
+
+      scale = Math.max(scale, 1);
 
       const left = (innerWidth - computedWidth) / 2;
       const right = left;

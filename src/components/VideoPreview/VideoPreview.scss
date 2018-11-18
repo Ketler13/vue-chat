@@ -1,12 +1,6 @@
 .video-preview {
   position: relative;
   transition: transform 0.1s linear;
-  
-  &.scaled {
-    position: absolute;
-    transform: scale(2);
-    box-shadow: 0px 0px 18px 1px rgba(0,0,0,1);
-  }
 }
 
 .scale-toggler {

@@ -1,25 +1,19 @@
 .main-view {
   display: flex;
   flex-flow: column;
+  height: calc(100vh - 64px);
 }
 
 .media-tracks {
-  max-height: 50vh;
-  height: 60vh;
-}
-
-.logs-and-controls {
-  display: flex;
-  flex-flow: row;
-  align-items: stretch;
-  max-height: calc(60vh - 64px);
-  height: calc(60vh - 64px);
+  max-height: 80vh;
+  // height: 50vh;
 }
 
 .room-controls {
+  display: flex;
+  flex-flow: row;
+  align-items: stretch;
+  max-height: calc(20vh - 64px);
+  height: calc(20vh - 64px);
   flex: 1;
-}
-
-.room-logs {
-  flex: 10;
 }

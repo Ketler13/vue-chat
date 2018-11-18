@@ -1,5 +1,6 @@
 <template>
-  <div class="room-logs"></div>
+  <div class="room-logs">
+  </div>
 </template>
 
 <script src="./RoomLogs.js"></script>

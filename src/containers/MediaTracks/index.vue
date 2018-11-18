@@ -1,5 +1,7 @@
 <template>
-  <div class="media-tracks">
+  <div
+    class="media-tracks"
+    :class="{ 'with-mock': !videoTracks.length }">
     <div class="video-previews">
       <div
         v-if="!videoTracks.length"
@@ -7,10 +9,14 @@
         <p>Please, click <v-icon color="white">videocam</v-icon> to allow preview</p>
       </div>
       <video-preview
-        v-for="video in videoTracks"
-        class="video-preview"
+        v-for="(video, index) in videoTracks"
+        class="video-preview item"
+        :ref="'preview' + index"
         :key="video.name"
-        :track="video"/>
+        :track="video"
+        @scaled="() => updateScaledIndex(index)"
+        @descaled="resetScaledIndex"
+      />
     </div>
     <audio-tracks :tracks="audioTracks" />
   </div>

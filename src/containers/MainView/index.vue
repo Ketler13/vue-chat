@@ -1,10 +1,7 @@
 <template>
   <div class="main-view">
     <media-tracks class="media-tracks" />
-    <div class="logs-and-controls">
-      <room-controls class="room-controls" />
-      <room-logs class="room-logs" />
-    </div>
+    <room-controls class="room-controls" />
   </div>
 </template>
 
