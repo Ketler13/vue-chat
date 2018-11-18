@@ -1,27 +1,22 @@
 import Vue from 'vue';
 
 import {
-  SET_PREVIEW_TRACKS,
   SET_PREVIEW_ERROR,
   SET_ROOM_CONNECTION_STATUS,
   SET_EXTENSION_STATUS,
-  SET_PARTICIPANT_TRACKS,
-  REMOVE_PREVIEW_TRACKS,
+  SET_PEER,
+  REMOVE_PEER,
+  SET_TRACKS,
+  REMOVE_TRACKS,
+  REMOVE_TRACK,
   SHARE_SCREEN,
   UNSHARE_SCREEN,
 } from './mutationTypes';
 
-function detachTracks(tracks) {
-  tracks
-    .forEach(track => track.detach()
-      .forEach(detachedElement => detachedElement.remove()));
-}
+import { detachTrack, detachTracks } from './trackHelper';
 
 export default {
   /* eslint-disable no-param-reassign */
-  [SET_PREVIEW_TRACKS](state, tracks) {
-    state.previewTracks = tracks;
-  },
   [SET_PREVIEW_ERROR](state, error) {
     state.previewError = error;
   },
@@ -31,12 +26,24 @@ export default {
   [SET_EXTENSION_STATUS](state, status) {
     state.extensionInstalled = status;
   },
-  [SET_PARTICIPANT_TRACKS](state, { role, tracks }) {
-    Vue.set(state.tracks, role, tracks);
+  [SET_PEER](state, peer) {
+    state.peer = peer;
   },
-  [REMOVE_PREVIEW_TRACKS](state) {
-    detachTracks(state.previewTracks);
-    state.previewTracks = null;
+  [REMOVE_PEER](state) {
+    state.peer = null;
+  },
+  [SET_TRACKS](state, { role, tracks }) {
+    tracks.forEach((track) => {
+      Vue.set(state[role], track.name, track);
+    });
+  },
+  [REMOVE_TRACKS](state, role) {
+    detachTracks(Object.values(state[role]));
+    state[role] = {};
+  },
+  [REMOVE_TRACK](state, { role, id }) {
+    detachTrack(state[role][id]);
+    Vue.delete(state[role], id);
   },
   [SHARE_SCREEN](state) {
     state.screenShared = true;

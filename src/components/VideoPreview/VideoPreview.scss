@@ -12,7 +12,7 @@
 .scale-toggler {
   position: absolute;
   z-index: 1;
-  bottom: 0px;
+  bottom: 10px;
   right: 10px;
   width: 30px;
   height: 30px;
@@ -26,20 +26,5 @@
   
   &:hover {
     opacity: 1;
-  }
-}
-
-.toggler-title {
-  display: block;
-  width: 40px;
-
-  &.left {
-    transform: rotate(45deg);
-    transform-origin: 14px -5px;
-  }
-
-  &.right {
-    transform: rotate(-45deg);
-    transform-origin: -5px 12px;
   }
 }

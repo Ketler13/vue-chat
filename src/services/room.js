@@ -3,22 +3,25 @@ import Video from 'twilio-video';
 
 import store from '@/store';
 import {
-  SET_PREVIEW_TRACKS,
   SET_PREVIEW_ERROR,
   SET_ROOM_CONNECTION_STATUS,
   SET_EXTENSION_STATUS,
-  SET_PARTICIPANT_TRACKS,
-  REMOVE_PREVIEW_TRACKS,
+  SET_PEER,
+  REMOVE_PEER,
+  SET_TRACKS,
+  REMOVE_TRACKS,
+  REMOVE_TRACK,
   SHARE_SCREEN,
   UNSHARE_SCREEN,
 } from '@/store/room/mutationTypes';
+
 import {
   ROOM_CONNECTION_SUCCESS,
   ROOM_CONNECTION_PENDING,
   ROOM_CONNECTION_FAIL,
   ROOM_CONNECTION_DISCONNECTED,
-  ROLE_USER,
-  ROLE_PEER,
+  LOCAL_TRACK,
+  REMOTE_TRACK,
 } from '@/store/room/constants';
 
 import { EXTENSION_ID } from '@/services/constants';
@@ -64,12 +67,12 @@ export function initLocalPreview() {
     : Video.createLocalTracks();
 
   return promise
-    .then(setPreviewTracks)
+    .then(tracks => setParticipantTracks(tracks, LOCAL_TRACK))
     .catch(setPreviewError);
 }
 
 export function finishLocalPreview() {
-  removePreviewTracks();
+  removeLocalTracks();
 }
 
 export function leaveRoom() {
@@ -97,40 +100,36 @@ export function unShareScreen() {
 // private methods
 
 function onRoomJoined(room) {
-  console.log(room.participants);
   activeRoom = room;
   connectedToRoom = true;
   setRoomConnectionStatus(ROOM_CONNECTION_SUCCESS);
   checkExtension();
-  handleParticipantTracksAdding(room.localParticipant, ROLE_USER);
+  if (!store.getters.localVideoTracks.length) {
+    handleParticipantTracksAdding(room.localParticipant, LOCAL_TRACK);
+  }
 
   room.participants
-    .forEach(participant => handleParticipantTracksAdding(participant, ROLE_PEER));
+    .forEach(participant => handleParticipantTracksAdding(participant, REMOTE_TRACK));
 
   room.on('participantConnected', onParticipantConnected);
   room.on('trackAdded', onTrackAdded);
   room.on('trackRemoved', onTrackRemoved);
   room.on('participantDisconnected', onParticipantDisconnected);
-
-  // Once the LocalParticipant leaves the room, detach the Tracks
-  // of all Participants, including that of the LocalParticipant.
   room.on('disconnected', onRoomDisconnected);
 }
 
-function onRoomConnectionFailed(err) {
-  console.log(err);
+function onRoomConnectionFailed() {
   activeRoom = null;
   connectedToRoom = false;
   setRoomConnectionStatus(ROOM_CONNECTION_FAIL);
 }
 
 function onRoomDisconnected() {
-  console.log('Left');
   if (previewTracks) {
     previewTracks.forEach(track => track.stop());
   }
-  detachParticipantTracks(activeRoom.localParticipant);
-  activeRoom.participants.forEach(detachParticipantTracks);
+  removeLocalTracks();
+  removeRemoteTracks();
   activeRoom = null;
 }
 
@@ -139,28 +138,21 @@ function handleParticipantTracksAdding(participant, role) {
   setParticipantTracks(tracks, role);
 }
 
-// function handleParticipantTracksRemoving(participant) {
-//   var tracks = Array.from(participant.tracks.values());
-//   setParticipantTracks(tracks);
-// }
-
 function onParticipantConnected(participant) {
-  console.log(participant.identity);
+  setPeer(participant);
 }
 
-function onTrackAdded(track, participant) {
-  console.log(participant.identity + ' added track: ' + track.kind);
-  setParticipantTracks([track], ROLE_PEER);
+function onTrackAdded(track) {
+  setParticipantTracks([track], REMOTE_TRACK);
 }
 
-function onTrackRemoved(track, participant) {
-  console.log(participant.identity + ' removed track: ' + track.kind);
-  // detachTracks([track]);
+function onTrackRemoved(track) {
+  removeLocalTrackById(track.name);
 }
 
-function onParticipantDisconnected(participant) {
-  log("Participant '" + participant.identity + "' left the room");
-  detachParticipantTracks(participant);
+function onParticipantDisconnected() {
+  removePeer();
+  removeRemoteTracks();
 }
 
 function getUserScreen() {
@@ -220,13 +212,13 @@ function onChromeExtensionSuccess(response) {
 
 function onGetUserScreenSuccess(stream) {
   setScreenSharing();
-  screenTrack = stream.getVideoTracks()[0];
+  const [track] = stream.getVideoTracks();
+  screenTrack = track;
   activeRoom.localParticipant.publishTrack(screenTrack);
 }
 
-function onGetUserScreenFail(error) {
+function onGetUserScreenFail() {
   removeScreenSharing();
-  console.error('onGetUserScreenFail', error);
 }
 
 function checkExtension() {
@@ -248,14 +240,6 @@ function canShareScreen() {
 
 // store interactors
 
-function setPreviewTracks(tracks) {
-  store.commit(SET_PREVIEW_TRACKS, tracks);
-}
-
-function removePreviewTracks() {
-  store.commit(REMOVE_PREVIEW_TRACKS);
-}
-
 function setPreviewError() {
   store.commit(SET_PREVIEW_ERROR, true);
 }
@@ -272,8 +256,28 @@ function setExtensionStatus(status) {
   store.commit(SET_EXTENSION_STATUS, status);
 }
 
+function setPeer(peer) {
+  store.commit(SET_PEER, peer);
+}
+
+function removePeer() {
+  store.commit(REMOVE_PEER);
+}
+
 function setParticipantTracks(tracks, role) {
-  store.commit(SET_PARTICIPANT_TRACKS, { role, tracks });
+  store.commit(SET_TRACKS, { role, tracks });
+}
+
+function removeRemoteTracks() {
+  store.commit(REMOVE_TRACKS, REMOTE_TRACK);
+}
+
+function removeLocalTracks() {
+  store.commit(REMOVE_TRACKS, LOCAL_TRACK);
+}
+
+function removeLocalTrackById(id) {
+  store.commit(REMOVE_TRACK, { role: LOCAL_TRACK, id });
 }
 
 function setScreenSharing() {

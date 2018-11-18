@@ -1,12 +1,25 @@
 .main-view {
   display: flex;
+  flex-flow: column;
+}
+
+.media-tracks {
+  max-height: 50vh;
+  height: 60vh;
+}
+
+.logs-and-controls {
+  display: flex;
   flex-flow: row;
-  
-  .user-section {
-    flex: 2;
-  }
-  
-  .peer-section {
-    flex: 3;
-  }
+  align-items: stretch;
+  max-height: calc(60vh - 64px);
+  height: calc(60vh - 64px);
+}
+
+.room-controls {
+  flex: 1;
+}
+
+.room-logs {
+  flex: 10;
 }

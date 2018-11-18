@@ -3,9 +3,11 @@ import {
   ROOM_CONNECTION_SUCCESS,
   ROOM_CONNECTION_FAIL,
   ROOM_CONNECTION_PENDING,
-  ROLE_USER,
-  ROLE_PEER,
+  LOCAL_TRACK,
+  REMOTE_TRACK,
 } from './constants';
+
+import { isAudio, isVideo } from './trackHelper';
 
 export default {
   isConnectionToRoomSucceed(state) {
@@ -20,10 +22,22 @@ export default {
   isDisconnectedFromRoom(state) {
     return state.connectionStatus === ROOM_CONNECTION_DISCONNECTED;
   },
-  userTracks(state) {
-    return state.tracks[ROLE_USER];
+  localTracks(state) {
+    return Object.values(state[LOCAL_TRACK]);
   },
-  peerTracks(state) {
-    return state.tracks[ROLE_PEER];
+  remoteTracks(state) {
+    return Object.values(state[REMOTE_TRACK]);
+  },
+  localAudioTracks(state, { localTracks = [] }) {
+    return localTracks.filter(isAudio);
+  },
+  localVideoTracks(state, { localTracks = [] }) {
+    return localTracks.filter(isVideo);
+  },
+  remoteAudioTracks(state, { remoteTracks = [] }) {
+    return remoteTracks.filter(isAudio);
+  },
+  remoteVideoTracks(state, { remoteTracks = [] }) {
+    return remoteTracks.filter(isVideo);
   },
 };

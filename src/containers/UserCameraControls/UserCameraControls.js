@@ -1,13 +1,11 @@
+import AudioTracks from '@/components/AudioTracks';
 import VideoPreview from '@/components/VideoPreview';
-import TogglerButton from '@/components/TogglerButton';
-
-import { initLocalPreview, finishLocalPreview } from '@/services/room';
 
 export default {
   name: 'UserCameraControls',
   components: {
+    AudioTracks,
     VideoPreview,
-    TogglerButton,
   },
   data() {
     return {
@@ -16,19 +14,14 @@ export default {
     };
   },
   computed: {
-    previewTracks() {
-      return this.$store.state.room.previewTracks;
+    audioTracks() {
+      return this.$store.getters.localAudioTracks;
+    },
+    videoTracks() {
+      return this.$store.getters.localVideoTracks;
     },
     previewError() {
       return this.$store.state.room.previewError;
-    },
-  },
-  methods: {
-    showPreview() {
-      initLocalPreview();
-    },
-    hidePreview() {
-      finishLocalPreview();
     },
   },
 };

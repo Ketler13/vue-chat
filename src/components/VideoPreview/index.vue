@@ -3,13 +3,18 @@
     class="video-preview"
     ref="previewContainer"
   >
-    <button
+    <v-btn
       class="scale-toggler"
+      absolute
+      color="transparent"
+      :icon="true"
+      small
+      fab
       @click="toggleScale"
     >
-      <span class="toggler-title left">{{ scaled ? '🡒 🡐' : '🡐 🡒' }}</span>
-      <span class="toggler-title right">{{ scaled ? '🡒 🡐' : '🡐 🡒' }}</span>
-    </button>
+      <v-icon v-if="scaled">fullscreen_exit</v-icon>
+      <v-icon v-else>zoom_out_map</v-icon>
+    </v-btn>
   </div>
 </template>
 

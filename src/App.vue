@@ -1,19 +1,17 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <app-header />
     <main-view />
-  </div>
+  </v-app>
 </template>
 
 <script>
 import { GET_TOKEN } from '@/store/actionTypes';
-import NotInstalledExtensionWarning from '@/components/NotInstalledExtensionWarning';
 import AppHeader from '@/containers/AppHeader';
 import MainView from '@/containers/MainView';
 
 export default {
   components: {
-    NotInstalledExtensionWarning,
     AppHeader,
     MainView,
   },
@@ -34,4 +32,5 @@ export default {
 </script>
 
 <style src="@/assets/styles/reset.css"></style>
+<style src="material-design-icons/iconfont/material-icons.css"></style>
 <style lang="scss" src="@/assets/styles/common.scss"></style>

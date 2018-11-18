@@ -8,14 +8,12 @@
   align-items: center;
 }
 
-.video-preview {
+.video-preview, .preview-mock {
   width: 300px;
   min-height: 225px;
   background-color: black;
-}
-
-.preview-toggler {
-  width: 100px;
-  height: 50px;
-  background-color: red;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

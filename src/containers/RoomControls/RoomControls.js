@@ -3,12 +3,15 @@ import {
   leaveRoom,
   shareScreen,
   unShareScreen,
+  initLocalPreview,
+  finishLocalPreview,
 } from '@/services/room';
 
 export default {
-  name: 'UserRoomControls',
+  name: 'RoomControls',
   data() {
     return {
+      dialog: false,
       userName: 'Lemmy Killmister',
       roomName: 'PeerToPeer',
     };
@@ -32,9 +35,13 @@ export default {
     isScreenShared() {
       return this.$store.state.room.screenShared;
     },
+    isLocalPreviewStarted() {
+      return !!this.$store.getters.localTracks.length;
+    },
   },
   methods: {
     connectToRoom() {
+      this.dialog = false;
       return connectToRoom(this.roomName);
     },
     leaveRoom() {
@@ -45,6 +52,13 @@ export default {
     },
     unShareScreen() {
       return unShareScreen();
+    },
+    togglePreview() {
+      if (this.isLocalPreviewStarted) {
+        finishLocalPreview();
+      } else {
+        initLocalPreview();
+      }
     },
   },
 };

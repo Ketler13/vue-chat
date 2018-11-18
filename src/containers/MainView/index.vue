@@ -1,7 +1,10 @@
 <template>
   <div class="main-view">
-    <user-section class="user-section" />
-    <peer-section class="peer-section" />
+    <media-tracks class="media-tracks" />
+    <div class="logs-and-controls">
+      <room-controls class="room-controls" />
+      <room-logs class="room-logs" />
+    </div>
   </div>
 </template>
 

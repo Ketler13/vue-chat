@@ -1,10 +1,12 @@
-import UserSection from '@/containers/UserSection';
-import PeerSection from '@/containers/PeerSection';
+import MediaTracks from '@/containers/MediaTracks';
+import RoomLogs from '@/containers/RoomLogs';
+import RoomControls from '@/containers/RoomControls';
 
 export default {
   name: 'MainView',
   components: {
-    UserSection,
-    PeerSection,
+    MediaTracks,
+    RoomLogs,
+    RoomControls,
   },
 };

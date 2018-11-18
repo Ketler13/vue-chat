@@ -1,42 +1,33 @@
 export default {
   name: 'VideoPreview',
   props: {
-    tracks: {
-      type: Array,
-      default: () => [],
+    track: {
+      type: Object,
+      required: true,
     },
   },
   data() {
     return {
       scaled: false,
+      containerStyles: null,
+      videoStyles: null,
     };
   },
-  watch: {
-    tracks(tracks) {
-      if (tracks && tracks.length) {
-        this.activateVideo(tracks);
-      } else {
-        this.deactivateVideo();
-      }
-    },
+  mounted() {
+    this.attachTrack();
   },
   methods: {
-    activateVideo() {
-      this.$nextTick(this.attachTracks);
-    },
-    deactivateVideo() {
-    },
-    attachTracks() {
-      this.tracks.forEach((track) => {
-        this.$refs.previewContainer.appendChild(track.attach());
-      });
+    attachTrack() {
+      this.$refs.previewContainer.appendChild(this.track.attach());
     },
     toggleScale() {
       this.scaled = !this.scaled;
-      this.$refs.previewContainer.classList.toggle('scaled');
+      // this.$refs.previewContainer.classList.toggle('scaled');
       if (this.scaled) {
+        this.scaleVideo();
         this.subscribeToClickOut();
       } else {
+        this.descaleVideo();
         this.unsubscribeFromClickOut();
       }
     },
@@ -51,6 +42,71 @@ export default {
         this.toggleScale();
         this.unsubscribeFromClickOut();
       }
+    },
+    scaleVideo() {
+      const container = this.$refs.previewContainer;
+      const video = this.$el.querySelector('video');
+
+      if (!this.scaleStyles) {
+        this.calulateScaleStyles();
+      }
+
+      Object.entries(this.containerStyles)
+        .forEach(([property, value]) => {
+          container.style[property] = value;
+        });
+
+      Object.entries(this.videoStyles)
+        .forEach(([property, value]) => {
+          video.style[property] = value;
+        });
+    },
+    descaleVideo() {
+      this.$refs.previewContainer.style = '';
+      this.$el.querySelector('video').style.transform = 'scale(1)';
+    },
+    calulateScaleStyles() {
+      const { innerWidth, innerHeight } = window;
+      const maxwWidth = innerWidth * 0.9;
+      const maxHeight = innerHeight * 0.9;
+      const { width: realWidth, height: realHeight } = this.track.dimensions;
+      const windowRatio = innerWidth / innerHeight;
+      const trackRatio = realWidth / realHeight;
+      const scaleByHeight = windowRatio > trackRatio;
+
+      let computedWidth = realWidth;
+      let computedHeight = realHeight;
+      let scale = 1;
+
+      if (scaleByHeight) {
+        scale = maxHeight / realHeight;
+        computedHeight = maxHeight;
+        computedWidth = realWidth * scale;
+      } else {
+        scale = maxwWidth / realWidth;
+        computedWidth = maxwWidth;
+        computedHeight = realHeight * scale;
+      }
+
+      const left = (innerWidth - computedWidth) / 2;
+      const right = left;
+      const top = (innerHeight - computedHeight) / 2;
+      const bottom = top;
+
+      this.containerStyles = {
+        position: 'absolute',
+        top: `${top}px`,
+        left: `${left}px`,
+        right: `${right}px`,
+        bottom: `${bottom}px`,
+        width: `${computedWidth}px`,
+        height: `${computedHeight}px`,
+        zIndex: '20',
+      };
+
+      this.videoStyles = {
+        transform: `scale(${scale})`,
+      };
     },
   },
 };

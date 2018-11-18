@@ -12,7 +12,7 @@ Vue.use(Vuex);
 const debug = process.env.NODE_ENV !== 'production';
 
 const state = {
-  userName: 'My Lord',
+  userName: 'Mr. John Smith',
   token: null,
 };
 
