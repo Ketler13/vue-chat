@@ -2,6 +2,7 @@
   <div
     class="video-preview"
     ref="previewContainer"
+    @dblclick="toggleScale"
   >
     <v-btn
       class="scale-toggler"

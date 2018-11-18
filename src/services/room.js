@@ -147,7 +147,7 @@ function onTrackAdded(track) {
 }
 
 function onTrackRemoved(track) {
-  removeLocalTrackById(track.name);
+  removeTrackById(track.name);
 }
 
 function onParticipantDisconnected() {
@@ -276,8 +276,8 @@ function removeLocalTracks() {
   store.commit(REMOVE_TRACKS, LOCAL_TRACK);
 }
 
-function removeLocalTrackById(id) {
-  store.commit(REMOVE_TRACK, { role: LOCAL_TRACK, id });
+function removeTrackById(id) {
+  store.commit(REMOVE_TRACK, id);
 }
 
 function setScreenSharing() {

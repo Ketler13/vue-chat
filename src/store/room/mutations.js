@@ -13,6 +13,8 @@ import {
   UNSHARE_SCREEN,
 } from './mutationTypes';
 
+import { LOCAL_TRACK, REMOTE_TRACK } from './constants';
+
 import { detachTrack, detachTracks } from './trackHelper';
 
 export default {
@@ -41,7 +43,8 @@ export default {
     detachTracks(Object.values(state[role]));
     state[role] = {};
   },
-  [REMOVE_TRACK](state, { role, id }) {
+  [REMOVE_TRACK](state, id) {
+    const role = state[LOCAL_TRACK][id] ? LOCAL_TRACK : REMOTE_TRACK;
     detachTrack(state[role][id]);
     Vue.delete(state[role], id);
   },
