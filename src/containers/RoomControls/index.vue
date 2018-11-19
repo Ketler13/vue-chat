@@ -7,11 +7,17 @@
     >
       <v-btn
         slot="activator"
-        color="#304ffe"
+        color="#26a69a"
+        :disabled="connecting"
         fab
         large
       >
-        <v-icon>add</v-icon>
+        <v-icon
+          color="white"
+          :class="{ connecting: connecting }"
+        >
+          {{ connecting ? 'phone_forwarded' : 'call' }}
+        </v-icon>
       </v-btn>
 
       <v-card>
@@ -41,7 +47,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="success"
+            color="#9fa8da"
             @click="connectToRoom"
           >
             OK
@@ -54,31 +60,32 @@
       class="connected-buttons"
     >
       <v-btn
-        fab
-        large
-        color="warning"
-        @click="leaveRoom"
-      >
-        <v-icon>clear</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        large
         v-if="isScreenShared"
+        fab
+        large
         class="unshare-screen"
         @click="unShareScreen"
       >
         <v-icon>stop_screen_share</v-icon>
       </v-btn>
       <v-btn
+        v-else
         fab
         large
-        v-else
         color="info"
         class="share-screen"
+        :disabled="!isExtensionInstalled"
         @click="shareScreen"
       >
         <v-icon>screen_share</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        large
+        color="#b71c1c"
+        @click="leaveRoom"
+      >
+        <v-icon color="white">call_end</v-icon>
       </v-btn>
     </div>
     <div class="preview-toggler-wrapper">

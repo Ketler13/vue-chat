@@ -1,15 +1,19 @@
-.extension-warning-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: black;
+.not-installed-extension-warning {
+  width: 100%;
   display: flex;
-  color: white;
-  font-size: 48px;
-  text-transform: uppercase;
-  font-family: fantasy;
+  flex-flow: row;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  bottom: 0;
+  background-color: #ffb300;
+  font-size: 12px;
+}
+
+.close-icon {
+  cursor: pointer;
+}
+
+.extension-link {
+  color: red;
 }

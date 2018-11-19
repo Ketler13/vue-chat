@@ -38,6 +38,9 @@ export default {
     isLocalPreviewStarted() {
       return !!this.$store.getters.localTracks.length;
     },
+    isExtensionInstalled() {
+      return this.$store.state.room.extensionInstalled;
+    },
   },
   methods: {
     connectToRoom() {

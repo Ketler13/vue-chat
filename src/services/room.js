@@ -36,6 +36,8 @@ let activeRoom = null;
 let connectedToRoom = false;
 let screenTrack = null;
 
+checkExtension();
+
 // public methods
 
 export function connectToRoom(roomName) {

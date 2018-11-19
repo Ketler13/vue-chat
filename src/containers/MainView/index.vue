@@ -2,6 +2,7 @@
   <div class="main-view">
     <media-tracks class="media-tracks" />
     <room-controls class="room-controls" />
+    <not-installed-extension-warning v-if="!extensionInstalled" />
   </div>
 </template>
 

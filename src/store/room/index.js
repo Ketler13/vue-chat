@@ -12,7 +12,7 @@ const state = {
   connectionStatus: ROOM_CONNECTION_DISCONNECTED,
   connectionError: false,
   previewError: null,
-  extensionInstalled: false,
+  extensionInstalled: true,
   screenShared: false,
   peer: null,
   [LOCAL_TRACK]: {},
