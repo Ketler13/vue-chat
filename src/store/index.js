@@ -6,6 +6,7 @@ import mutations from '@/store/mutations';
 import actions from '@/store/actions';
 
 import room from '@/store/room';
+import socket from '@/store/socket';
 
 Vue.use(Vuex);
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
   actions,
   modules: {
     room,
+    socket,
   },
   strict: debug,
 });

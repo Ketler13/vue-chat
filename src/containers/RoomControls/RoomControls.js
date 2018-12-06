@@ -7,6 +7,8 @@ import {
   finishLocalPreview,
 } from '@/services/room';
 
+import { onCallFinished } from '@/services/socket';
+
 export default {
   name: 'RoomControls',
   data() {
@@ -48,7 +50,8 @@ export default {
       return connectToRoom(this.roomName);
     },
     leaveRoom() {
-      return leaveRoom();
+      leaveRoom();
+      onCallFinished();
     },
     shareScreen() {
       return shareScreen();

@@ -29,8 +29,8 @@ import { isChrome, isFirefox } from '@/services/browser';
 
 const isBrowserChrome = isChrome();
 const isBrowserFirefox = isFirefox();
-const previewTracks = null;
 
+let previewTracks = null;
 let extensionInstalled = false;
 let activeRoom = null;
 let connectedToRoom = false;
@@ -69,7 +69,10 @@ export function initLocalPreview() {
     : Video.createLocalTracks();
 
   return promise
-    .then(tracks => setParticipantTracks(tracks, LOCAL_TRACK))
+    .then((tracks) => {
+      previewTracks = tracks;
+      setParticipantTracks(tracks, LOCAL_TRACK);
+    })
     .catch(setPreviewError);
 }
 

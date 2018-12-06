@@ -31,4 +31,27 @@ html {
       }
     }
   }
+
+  .incoming-call-notifier {
+    padding: 20px 0;
+    box-shadow: 0 0 15px -7px rgba(0,0,0,.2), 0 0 15px 3px rgba(0,0,0,.14), 0 0x 15px 8px rgba(0,0,0,.12);
+    animation: incoming-call 1s linear infinite;
+    .incoming-call-title {
+      text-transform: uppercase;
+      font-size: 24px;
+      color: white;
+    }
+  }
+}
+
+@keyframes incoming-call {
+  0% {
+    box-shadow: 0 0 15px -7px rgba(0,0,0,.2), 0 0 15px -7px rgba(0,0,0,.14), 0 0 15px -7px rgba(0,0,0,.12);
+  }
+  33% {
+    box-shadow: 0 0 15px -7px rgba(146, 88, 157, 1), 0 0 15px 3px rgba(146, 88, 157, 1), 0 0 15px 8px rgba(146, 88, 157, 1);
+  }
+  66% {
+    box-shadow: 0 0 15px -7px rgba(0,0,0,.2), 0 0 15px 3px rgba(0,0,0,.14), 0 0 15px 8px rgba(0,0,0,.12);
+  }
 }
