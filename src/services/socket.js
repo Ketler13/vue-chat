@@ -7,7 +7,7 @@ import { SET_INCOMING_CALL_STATUS } from '@/store/socket/mutationTypes';
 import { callStatuses } from '@/store/socket/constants';
 import { connectToRoom, leaveRoom } from '@/services/room';
 
-const socket = io('http://localhost:3000/operators');
+const socket = io('/operators');
 const operatorId = socket.id;
 // const socket = io.connect('/operators');
 
